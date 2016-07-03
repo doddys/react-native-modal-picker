@@ -1,5 +1,9 @@
 'use strict';
-import React, {Component, PropTypes} from 'react';
+
+import React,{
+    PropTypes
+} from 'react';
+
 import {
     View,
     StyleSheet,
@@ -8,16 +12,13 @@ import {
     Text,
     ScrollView,
     TouchableOpacity,
-    Platform,
+    Platform
 } from 'react-native';
 
 import styles from './style';
 import BaseComponent from './BaseComponent';
-import rebound from 'rebound';
 
-let tag;
 let componentIndex = 0;
-const Portal = require('react-native/Libraries/Portal/Portal.js');
 
 const propTypes = {
     data: PropTypes.array,
@@ -33,7 +34,7 @@ const propTypes = {
     cancelTextStyle: Text.propTypes.style,
     overlayStyle: View.propTypes.style,
     cancelText: PropTypes.string
-}
+};
 
 const defaultProps = {
     data: [],
@@ -49,7 +50,7 @@ const defaultProps = {
     cancelTextStyle: {},
     overlayStyle: {},
     cancelText: 'cancel'
-}
+};
 
 export default class ModalPicker extends BaseComponent {
 
@@ -65,10 +66,10 @@ export default class ModalPicker extends BaseComponent {
         );
 
         this.state = {
-            animated: true,
+            animationType: 'slide',
             modalVisible: false,
             transparent: false,
-            selected: 'please select',
+            selected: 'please select'
         };
     }
 
@@ -84,27 +85,18 @@ export default class ModalPicker extends BaseComponent {
     }
 
     close() {
-        if (Platform.OS == 'android') {
-            Portal.closeModal(tag);
-        } else {
-            this.setState({
-                modalVisible: false
-            });
-        }
+      this.setState({
+        modalVisible: false
+      });
     }
 
     open() {
-        if (Platform.OS == 'android') {
-            Portal.showModal(tag, this.renderOptionList());
-        } else {
-            this.setState({
-                modalVisible: true
-            });
-        }
+      this.setState({
+        modalVisible: true
+      });
     }
 
     renderSection(section) {
-
         return (
             <View key={section.key} style={[styles.sectionStyle,this.props.sectionStyle]}>
                 <Text style={[styles.sectionTextStyle,this.props.sectionTextStyle]}>{section.label}</Text>
@@ -113,13 +105,10 @@ export default class ModalPicker extends BaseComponent {
     }
 
     renderOption(option) {
-        const label = this.props.extractText ? this.props.extractText(option) : option.label;
-        const key = this.props.extractKey ? this.props.extractKey(option) : option.key;
-
         return (
-            <TouchableOpacity key={key} onPress={()=>this.onChange(option)}>
+            <TouchableOpacity key={option.key} onPress={()=>this.onChange(option)}>
                 <View style={[styles.optionStyle, this.props.optionStyle]}>
-                    <Text style={[styles.optionTextStyle,this.props.optionTextStyle]}>{label}</Text>
+                    <Text style={[styles.optionTextStyle,this.props.optionTextStyle]}>{option.label}</Text>
                 </View>
             </TouchableOpacity>)
     }
@@ -165,22 +154,13 @@ export default class ModalPicker extends BaseComponent {
         );
     }
 
-    componentWillMount() {
-        if (Platform.OS === 'android')
-            tag = Portal.allocateTag();
-    }
-
     render() {
 
-        let dp = null;
-        if (Platform.OS == 'android') {
-
-        } else {
-            dp = (
-                <Modal transparent={true} ref="modal" visible={this.state.modalVisible} animated={this.state.animated}>
-                    {this.renderOptionList()}
-                </Modal>);
-        }
+        const dp = (
+          <Modal transparent={true} ref="modal" visible={this.state.modalVisible} onRequestClose={this.close} animationType={this.state.animationType}>
+          {this.renderOptionList()}
+          </Modal>
+        );
 
         return (
             <View style={this.props.style}>
