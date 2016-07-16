@@ -105,10 +105,15 @@ export default class ModalPicker extends BaseComponent {
     }
 
     renderOption(option) {
+        const label = this.props.extractText ? this.props.extractText(option) ? option.label;
+        const key = this.props.extractKey ? this.props.extractKey(option) ? option.key;
+
+
+
         return (
-            <TouchableOpacity key={option.key} onPress={()=>this.onChange(option)}>
+            <TouchableOpacity key={key} onPress={()=>this.onChange(option)}>
                 <View style={[styles.optionStyle, this.props.optionStyle]}>
-                    <Text style={[styles.optionTextStyle,this.props.optionTextStyle]}>{option.label}</Text>
+                    <Text style={[styles.optionTextStyle,this.props.optionTextStyle]}>{label}</Text>
                 </View>
             </TouchableOpacity>)
     }
