@@ -105,8 +105,8 @@ export default class ModalPicker extends BaseComponent {
     }
 
     renderOption(option) {
-        const label = this.props.extractText ? this.props.extractText(option) ? option.label;
-        const key = this.props.extractKey ? this.props.extractKey(option) ? option.key;
+        const label = this.props.extractText ? this.props.extractText(option) : option.label;
+        const key = this.props.extractKey ? this.props.extractKey(option) : option.key;
 
 
 
